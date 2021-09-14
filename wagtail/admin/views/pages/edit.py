@@ -71,7 +71,7 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
          - Replied comments (dict containing the instance and list of replies)
         """
         # Get changes
-        comments_formset = self.form.formsets['comments']
+        comments_formset = self.form.formsets['wagtail_comments']
         new_comments = comments_formset.new_objects
         deleted_comments = comments_formset.deleted_objects
 
@@ -139,16 +139,16 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
         replies = CommentReply.objects.filter(comment_id__in=relevant_comment_ids)
         comments = Comment.objects.filter(id__in=relevant_comment_ids)
         thread_users = get_user_model().objects.exclude(pk=self.request.user.pk).exclude(pk__in=subscribers.values_list('user_id', flat=True)).prefetch_related(
-            Prefetch('comment_replies', queryset=replies),
-            Prefetch('comments', queryset=comments)
+            Prefetch('wagtail_comment_replies', queryset=replies),
+            Prefetch('wagtail_comments', queryset=comments)
         ).exclude(
-            Q(comment_replies__isnull=True) & Q(comments__isnull=True)
+            Q(wagtail_comment_replies__isnull=True) & Q(wagtail_comments__isnull=True)
         )
 
         # Skip if no recipients
         if not (global_recipient_users or thread_users):
             return
-        thread_users = [(user, set(list(user.comment_replies.values_list('comment_id', flat=True)) + list(user.comments.values_list('pk', flat=True)))) for user in thread_users]
+        thread_users = [(user, set(list(user.wagtail_comment_replies.values_list('comment_id', flat=True)) + list(user.wagtail_comments.values_list('pk', flat=True)))) for user in thread_users]
         mailed_users = set()
 
         for current_user, current_threads in thread_users:
@@ -456,7 +456,7 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
 
         self.add_save_confirmation_message()
 
-        if self.has_content_changes and 'comments' in self.form.formsets:
+        if self.has_content_changes and 'wagtail_comments' in self.form.formsets:
             changes = self.get_commenting_changes()
             self.log_commenting_changes(changes, revision)
             self.send_commenting_notifications(changes)
@@ -492,7 +492,7 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
             previous_revision=(self.previous_revision if self.is_reverting else None)
         )
 
-        if self.has_content_changes and 'comments' in self.form.formsets:
+        if self.has_content_changes and 'wagtail_comments' in self.form.formsets:
             changes = self.get_commenting_changes()
             self.log_commenting_changes(changes, revision)
             self.send_commenting_notifications(changes)
@@ -574,7 +574,7 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
             previous_revision=(self.previous_revision if self.is_reverting else None)
         )
 
-        if self.has_content_changes and 'comments' in self.form.formsets:
+        if self.has_content_changes and 'wagtail_comments' in self.form.formsets:
             changes = self.get_commenting_changes()
             self.log_commenting_changes(changes, revision)
             self.send_commenting_notifications(changes)
@@ -616,7 +616,7 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
             previous_revision=(self.previous_revision if self.is_reverting else None)
         )
 
-        if self.has_content_changes and 'comments' in self.form.formsets:
+        if self.has_content_changes and 'wagtail_comments' in self.form.formsets:
             changes = self.get_commenting_changes()
             self.log_commenting_changes(changes, revision)
             self.send_commenting_notifications(changes)
@@ -657,7 +657,7 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
                 previous_revision=(self.previous_revision if self.is_reverting else None)
             )
 
-            if 'comments' in self.form.formsets:
+            if 'wagtail_comments' in self.form.formsets:
                 changes = self.get_commenting_changes()
                 self.log_commenting_changes(changes, revision)
                 self.send_commenting_notifications(changes)
@@ -687,7 +687,7 @@ class EditView(TemplateResponseMixin, ContextMixin, HookResponseMixin, View):
             previous_revision=(self.previous_revision if self.is_reverting else None)
         )
 
-        if self.has_content_changes and 'comments' in self.form.formsets:
+        if self.has_content_changes and 'wagtail_comments' in self.form.formsets:
             changes = self.get_commenting_changes()
             self.log_commenting_changes(changes, revision)
             self.send_commenting_notifications(changes)

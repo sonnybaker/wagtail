@@ -1138,9 +1138,9 @@ class TestCommentPanel(TestCase, WagtailTestUtils):
         """
         form = self.EventPageForm(instance=self.event_page)
 
-        self.assertIn('comments', form.formsets)
+        self.assertIn('wagtail_comments', form.formsets)
 
-        comments_formset = form.formsets['comments']
+        comments_formset = form.formsets['wagtail_comments']
         self.assertEqual(len(comments_formset.forms), 1)
         self.assertEqual(comments_formset.forms[0].user, self.commenting_user)
 
@@ -1151,78 +1151,78 @@ class TestCommentPanel(TestCase, WagtailTestUtils):
     def test_comment_form_validation(self):
 
         form = self.EventPageForm({
-            'comments-TOTAL_FORMS': 2,
-            'comments-INITIAL_FORMS': 1,
-            'comments-MIN_NUM_FORMS': 0,
-            'comments-MAX_NUM_FORMS': 1000,
-            'comments-0-id': self.comment.pk,
-            'comments-0-text': 'edited text',  # Try to edit an existing comment from another user
-            'comments-0-contentpath': self.comment.contentpath,
-            'comments-0-replies-TOTAL_FORMS': 0,
-            'comments-0-replies-INITIAL_FORMS': 0,
-            'comments-0-replies-MIN_NUM_FORMS': 0,
-            'comments-0-replies-MAX_NUM_FORMS': 1000,
-            'comments-1-id': '',
-            'comments-1-text': 'new comment',  # Add a new comment
-            'comments-1-contentpath': 'new.path',
-            'comments-1-replies-TOTAL_FORMS': 0,
-            'comments-1-replies-INITIAL_FORMS': 0,
-            'comments-1-replies-MIN_NUM_FORMS': 0,
-            'comments-1-replies-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-TOTAL_FORMS': 2,
+            'wagtail_comments-INITIAL_FORMS': 1,
+            'wagtail_comments-MIN_NUM_FORMS': 0,
+            'wagtail_comments-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-id': self.comment.pk,
+            'wagtail_comments-0-text': 'edited text',  # Try to edit an existing comment from another user
+            'wagtail_comments-0-contentpath': self.comment.contentpath,
+            'wagtail_comments-0-replies-TOTAL_FORMS': 0,
+            'wagtail_comments-0-replies-INITIAL_FORMS': 0,
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': 0,
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-1-id': '',
+            'wagtail_comments-1-text': 'new comment',  # Add a new comment
+            'wagtail_comments-1-contentpath': 'new.path',
+            'wagtail_comments-1-replies-TOTAL_FORMS': 0,
+            'wagtail_comments-1-replies-INITIAL_FORMS': 0,
+            'wagtail_comments-1-replies-MIN_NUM_FORMS': 0,
+            'wagtail_comments-1-replies-MAX_NUM_FORMS': 1000,
         },
             instance=self.event_page
         )
 
-        comment_form = form.formsets['comments'].forms[0]
+        comment_form = form.formsets['wagtail_comments'].forms[0]
         self.assertFalse(comment_form.is_valid())
         # The existing comment was from another user, so should not be editable
 
-        comment_form = form.formsets['comments'].forms[1]
+        comment_form = form.formsets['wagtail_comments'].forms[1]
         self.assertTrue(comment_form.is_valid())
         self.assertEqual(comment_form.instance.user, self.commenting_user)
         # The commenting user should be able to add a new comment, and the new comment's user should be set to request.user
 
         form = self.EventPageForm({
-            'comments-TOTAL_FORMS': 1,
-            'comments-INITIAL_FORMS': 1,
-            'comments-MIN_NUM_FORMS': 0,
-            'comments-MAX_NUM_FORMS': 1000,
-            'comments-0-id': self.comment.pk,
-            'comments-0-text': self.comment.text,
-            'comments-0-contentpath': self.comment.contentpath,
-            'comments-0-DELETE': 1,  # Try to delete a comment from another user
-            'comments-0-replies-TOTAL_FORMS': 0,
-            'comments-0-replies-INITIAL_FORMS': 0,
-            'comments-0-replies-MIN_NUM_FORMS': 0,
-            'comments-0-replies-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-TOTAL_FORMS': 1,
+            'wagtail_comments-INITIAL_FORMS': 1,
+            'wagtail_comments-MIN_NUM_FORMS': 0,
+            'wagtail_comments-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-id': self.comment.pk,
+            'wagtail_comments-0-text': self.comment.text,
+            'wagtail_comments-0-contentpath': self.comment.contentpath,
+            'wagtail_comments-0-DELETE': 1,  # Try to delete a comment from another user
+            'wagtail_comments-0-replies-TOTAL_FORMS': 0,
+            'wagtail_comments-0-replies-INITIAL_FORMS': 0,
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': 0,
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': 1000,
         },
             instance=self.event_page
         )
 
-        comment_form = form.formsets['comments'].forms[0]
+        comment_form = form.formsets['wagtail_comments'].forms[0]
         self.assertFalse(comment_form.is_valid())
         # Users cannot delete comments from other users
 
     def test_users_can_edit_comment_positions(self):
         form = self.EventPageForm({
-            'comments-TOTAL_FORMS': 1,
-            'comments-INITIAL_FORMS': 1,
-            'comments-MIN_NUM_FORMS': 0,
-            'comments-MAX_NUM_FORMS': 1000,
-            'comments-0-id': self.comment.pk,
-            'comments-0-text': self.comment.text,
-            'comments-0-contentpath': self.comment.contentpath,
-            'comments-0-position': 'a_new_position',  # Try to change the position of a comment
-            'comments-0-DELETE': 0,
-            'comments-0-replies-TOTAL_FORMS': 0,
-            'comments-0-replies-INITIAL_FORMS': 0,
-            'comments-0-replies-MIN_NUM_FORMS': 0,
-            'comments-0-replies-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-TOTAL_FORMS': 1,
+            'wagtail_comments-INITIAL_FORMS': 1,
+            'wagtail_comments-MIN_NUM_FORMS': 0,
+            'wagtail_comments-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-id': self.comment.pk,
+            'wagtail_comments-0-text': self.comment.text,
+            'wagtail_comments-0-contentpath': self.comment.contentpath,
+            'wagtail_comments-0-position': 'a_new_position',  # Try to change the position of a comment
+            'wagtail_comments-0-DELETE': 0,
+            'wagtail_comments-0-replies-TOTAL_FORMS': 0,
+            'wagtail_comments-0-replies-INITIAL_FORMS': 0,
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': 0,
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': 1000,
         },
             instance=self.event_page
         )
 
-        comment_form = form.formsets['comments'].forms[0]
+        comment_form = form.formsets['wagtail_comments'].forms[0]
         self.assertTrue(comment_form.is_valid())
         # Users can change the positions of other users' comments within a field
         # eg by editing a rich text field
@@ -1230,22 +1230,22 @@ class TestCommentPanel(TestCase, WagtailTestUtils):
     @freeze_time("2017-01-01 12:00:00")
     def test_comment_resolve(self):
         form = self.EventPageForm({
-            'comments-TOTAL_FORMS': 1,
-            'comments-INITIAL_FORMS': 1,
-            'comments-MIN_NUM_FORMS': 0,
-            'comments-MAX_NUM_FORMS': 1000,
-            'comments-0-id': self.comment.pk,
-            'comments-0-text': self.comment.text,
-            'comments-0-contentpath': self.comment.contentpath,
-            'comments-0-resolved': 1,
-            'comments-0-replies-TOTAL_FORMS': 0,
-            'comments-0-replies-INITIAL_FORMS': 0,
-            'comments-0-replies-MIN_NUM_FORMS': 0,
-            'comments-0-replies-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-TOTAL_FORMS': 1,
+            'wagtail_comments-INITIAL_FORMS': 1,
+            'wagtail_comments-MIN_NUM_FORMS': 0,
+            'wagtail_comments-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-id': self.comment.pk,
+            'wagtail_comments-0-text': self.comment.text,
+            'wagtail_comments-0-contentpath': self.comment.contentpath,
+            'wagtail_comments-0-resolved': 1,
+            'wagtail_comments-0-replies-TOTAL_FORMS': 0,
+            'wagtail_comments-0-replies-INITIAL_FORMS': 0,
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': 0,
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': 1000,
         },
             instance=self.event_page
         )
-        comment_form = form.formsets['comments'].forms[0]
+        comment_form = form.formsets['wagtail_comments'].forms[0]
         self.assertTrue(comment_form.is_valid())
         comment_form.save()
         resolved_comment = Comment.objects.get(pk=self.comment.pk)
@@ -1259,28 +1259,28 @@ class TestCommentPanel(TestCase, WagtailTestUtils):
     def test_comment_reply_form_validation(self):
 
         form = self.EventPageForm({
-            'comments-TOTAL_FORMS': 1,
-            'comments-INITIAL_FORMS': 1,
-            'comments-MIN_NUM_FORMS': 0,
-            'comments-MAX_NUM_FORMS': 1000,
-            'comments-0-id': self.comment.pk,
-            'comments-0-text': self.comment.text,
-            'comments-0-contentpath': self.comment.contentpath,
-            'comments-0-replies-TOTAL_FORMS': 3,
-            'comments-0-replies-INITIAL_FORMS': 2,
-            'comments-0-replies-MIN_NUM_FORMS': 0,
-            'comments-0-replies-MAX_NUM_FORMS': 1000,
-            'comments-0-replies-0-id': self.reply_1.pk,
-            'comments-0-replies-0-text': 'edited_text',  # Try to edit someone else's reply
-            'comments-0-replies-1-id': self.reply_2.pk,
-            'comments-0-replies-1-text': "Edited text 2",  # Try to edit own reply
-            'comments-0-replies-2-id': "",  # Add new reply
-            'comments-0-replies-2-text': "New reply",
+            'wagtail_comments-TOTAL_FORMS': 1,
+            'wagtail_comments-INITIAL_FORMS': 1,
+            'wagtail_comments-MIN_NUM_FORMS': 0,
+            'wagtail_comments-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-id': self.comment.pk,
+            'wagtail_comments-0-text': self.comment.text,
+            'wagtail_comments-0-contentpath': self.comment.contentpath,
+            'wagtail_comments-0-replies-TOTAL_FORMS': 3,
+            'wagtail_comments-0-replies-INITIAL_FORMS': 2,
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': 0,
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-replies-0-id': self.reply_1.pk,
+            'wagtail_comments-0-replies-0-text': 'edited_text',  # Try to edit someone else's reply
+            'wagtail_comments-0-replies-1-id': self.reply_2.pk,
+            'wagtail_comments-0-replies-1-text': "Edited text 2",  # Try to edit own reply
+            'wagtail_comments-0-replies-2-id': "",  # Add new reply
+            'wagtail_comments-0-replies-2-text': "New reply",
         },
             instance=self.event_page
         )
 
-        comment_form = form.formsets['comments'].forms[0]
+        comment_form = form.formsets['wagtail_comments'].forms[0]
 
         reply_forms = comment_form.formsets['replies'].forms
 
@@ -1295,28 +1295,28 @@ class TestCommentPanel(TestCase, WagtailTestUtils):
         # Should be able to add new reply, and user should be set correctly
 
         form = self.EventPageForm({
-            'comments-TOTAL_FORMS': 1,
-            'comments-INITIAL_FORMS': 1,
-            'comments-MIN_NUM_FORMS': 0,
-            'comments-MAX_NUM_FORMS': 1000,
-            'comments-0-id': self.comment.pk,
-            'comments-0-text': self.comment.text,
-            'comments-0-contentpath': self.comment.contentpath,
-            'comments-0-replies-TOTAL_FORMS': 2,
-            'comments-0-replies-INITIAL_FORMS': 2,
-            'comments-0-replies-MIN_NUM_FORMS': 0,
-            'comments-0-replies-MAX_NUM_FORMS': 1000,
-            'comments-0-replies-0-id': self.reply_1.pk,
-            'comments-0-replies-0-text': self.reply_1.text,
-            'comments-0-replies-0-DELETE': 1,  # Try to delete someone else's reply
-            'comments-0-replies-1-id': self.reply_2.pk,
-            'comments-0-replies-1-text': "Edited text 2",
-            'comments-0-replies-1-DELETE': 1,  # Try to delete own reply
+            'wagtail_comments-TOTAL_FORMS': 1,
+            'wagtail_comments-INITIAL_FORMS': 1,
+            'wagtail_comments-MIN_NUM_FORMS': 0,
+            'wagtail_comments-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-id': self.comment.pk,
+            'wagtail_comments-0-text': self.comment.text,
+            'wagtail_comments-0-contentpath': self.comment.contentpath,
+            'wagtail_comments-0-replies-TOTAL_FORMS': 2,
+            'wagtail_comments-0-replies-INITIAL_FORMS': 2,
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': 0,
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-0-replies-0-id': self.reply_1.pk,
+            'wagtail_comments-0-replies-0-text': self.reply_1.text,
+            'wagtail_comments-0-replies-0-DELETE': 1,  # Try to delete someone else's reply
+            'wagtail_comments-0-replies-1-id': self.reply_2.pk,
+            'wagtail_comments-0-replies-1-text': "Edited text 2",
+            'wagtail_comments-0-replies-1-DELETE': 1,  # Try to delete own reply
         },
             instance=self.event_page
         )
 
-        comment_form = form.formsets['comments'].forms[0]
+        comment_form = form.formsets['wagtail_comments'].forms[0]
 
         reply_forms = comment_form.formsets['replies'].forms
 

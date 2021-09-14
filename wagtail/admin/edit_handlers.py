@@ -847,7 +847,7 @@ class CommentPanel(EditHandler):
                 }
 
         return {
-            'comments': {
+            'wagtail_comments': {
                 'form': CommentFormWithRequest,
                 'fields': ['text', 'contentpath', 'position'],
             }
@@ -870,7 +870,7 @@ class CommentPanel(EditHandler):
         user_pks = {user.pk}
         serialized_comments = []
         bound = self.form.is_bound
-        comment_formset = self.form.formsets.get('comments')
+        comment_formset = self.form.formsets.get('wagtail_comments')
         comment_forms = comment_formset.forms if comment_formset else []
         for form in comment_forms:
             # iterate over comments to retrieve users (to get display names) and serialized versions

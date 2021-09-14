@@ -1150,7 +1150,7 @@ class TestCopyPage(TestCase):
     def test_copy_page_does_not_copy_comments(self):
         christmas_event = EventPage.objects.get(url_path='/home/events/christmas/')
 
-        christmas_event.comments = [Comment(text='test', user=christmas_event.owner)]
+        christmas_event.wagtail_comments = [Comment(text='test', user=christmas_event.owner)]
         christmas_event.save()
 
         # Copy the page as in `test_copy_page_copies_child_objects()``, but using exclude_fields
@@ -1160,11 +1160,11 @@ class TestCopyPage(TestCase):
         )
 
         # Check that the comments weren't removed from old page
-        self.assertEqual(christmas_event.comments.count(), 1, "Comments were removed from the original page")
+        self.assertEqual(christmas_event.wagtail_comments.count(), 1, "Comments were removed from the original page")
 
         # Check that comments were NOT copied over
         self.assertFalse(
-            new_christmas_event.comments.exists(),
+            new_christmas_event.wagtail_comments.exists(),
             "Comments were copied"
         )
 

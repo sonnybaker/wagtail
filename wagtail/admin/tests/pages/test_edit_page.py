@@ -401,10 +401,10 @@ class TestPageEdit(TestCase, WagtailTestUtils):
             'slug': 'hello-again-world',
             'action-publish': "Publish",
             'first_published_at': submittable_timestamp(first_published_at),
-            'comments-TOTAL_FORMS': 0,
-            'comments-INITIAL_FORMS': 0,
-            'comments-MIN_NUM_FORMS': 0,
-            'comments-MAX_NUM_FORMS': 1000,
+            'wagtail_comments-TOTAL_FORMS': 0,
+            'wagtail_comments-INITIAL_FORMS': 0,
+            'wagtail_comments-MIN_NUM_FORMS': 0,
+            'wagtail_comments-MAX_NUM_FORMS': 1000,
         }
         self.client.post(reverse('wagtailadmin_pages:edit', args=(self.child_page.id, )), post_data)
 
@@ -2109,20 +2109,20 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '0',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': '',
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '0',
-            'comments-0-replies-INITIAL_FORMS': '0',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '0'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '0',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': '',
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '0',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '0',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '0'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2130,7 +2130,7 @@ class TestCommenting(TestCase, WagtailTestUtils):
         self.assertRedirects(response, reverse('wagtailadmin_pages:edit', args=[self.child_page.id]))
 
         # Check the comment was added
-        comment = self.child_page.comments.get()
+        comment = self.child_page.wagtail_comments.get()
         self.assertEqual(comment.text, 'A test comment')
 
         # Check notification email
@@ -2160,20 +2160,20 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '1',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': str(comment.id),
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'Edited',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '0',
-            'comments-0-replies-INITIAL_FORMS': '0',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '0'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '1',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': str(comment.id),
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'Edited',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '0',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '0',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '0'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2208,25 +2208,25 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '1',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': str(comment.id),
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'Edited',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '0',
-            'comments-0-replies-INITIAL_FORMS': '0',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '0'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '1',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': str(comment.id),
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'Edited',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '0',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '0',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '0'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
 
-        self.assertEqual(response.context['form'].formsets['comments'].errors, [{'__all__': ["You cannot edit another user's comment."]}])
+        self.assertEqual(response.context['form'].formsets['wagtail_comments'].errors, [{'__all__': ["You cannot edit another user's comment."]}])
 
         # Check the comment was not edited
         comment.refresh_from_db()
@@ -2247,20 +2247,20 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '1',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': 'on',
-            'comments-0-id': str(comment.id),
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '0',
-            'comments-0-replies-INITIAL_FORMS': '0',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '0'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '1',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': 'on',
+            'wagtail_comments-0-id': str(comment.id),
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '0',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '0',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '0'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2303,20 +2303,20 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '1',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': 'on',
-            'comments-0-resolved': '',
-            'comments-0-id': str(comment.id),
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '0',
-            'comments-0-replies-INITIAL_FORMS': '0',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '0'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '1',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': 'on',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': str(comment.id),
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '0',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '0',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '0'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2324,7 +2324,7 @@ class TestCommenting(TestCase, WagtailTestUtils):
         self.assertRedirects(response, reverse('wagtailadmin_pages:edit', args=[self.child_page.id]))
 
         # Check the comment was deleted
-        self.assertFalse(self.child_page.comments.exists())
+        self.assertFalse(self.child_page.wagtail_comments.exists())
 
         # Check notification email
         self.assertEqual(len(mail.outbox), 1)
@@ -2359,24 +2359,24 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '1',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': str(comment.id),
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '2',
-            'comments-0-replies-INITIAL_FORMS': '1',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '',
-            'comments-0-replies-0-id': str(reply.id),
-            'comments-0-replies-0-text': 'an old reply',
-            'comments-0-replies-1-id': '',
-            'comments-0-replies-1-text': 'a new reply'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '1',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': str(comment.id),
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '2',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '1',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-replies-0-id': str(reply.id),
+            'wagtail_comments-0-replies-0-text': 'an old reply',
+            'wagtail_comments-0-replies-1-id': '',
+            'wagtail_comments-0-replies-1-text': 'a new reply'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2430,22 +2430,22 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '1',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': str(comment.id),
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '1',
-            'comments-0-replies-INITIAL_FORMS': '1',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '',
-            'comments-0-replies-0-id': str(reply.id),
-            'comments-0-replies-0-text': 'an edited reply',
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '1',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': str(comment.id),
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '1',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '1',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-replies-0-id': str(reply.id),
+            'wagtail_comments-0-replies-0-text': 'an edited reply',
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2488,23 +2488,23 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '1',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': str(comment.id),
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '1',
-            'comments-0-replies-INITIAL_FORMS': '1',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '',
-            'comments-0-replies-0-id': str(reply.id),
-            'comments-0-replies-0-text': 'an old reply',
-            'comments-0-replies-0-DELETE': 'on',
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '1',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': str(comment.id),
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '1',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '1',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-replies-0-id': str(reply.id),
+            'wagtail_comments-0-replies-0-text': 'an old reply',
+            'wagtail_comments-0-replies-0-DELETE': 'on',
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2538,20 +2538,20 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '0',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': '',
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '0',
-            'comments-0-replies-INITIAL_FORMS': '0',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '0'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '0',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': '',
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '0',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '0',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '0'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2559,7 +2559,7 @@ class TestCommenting(TestCase, WagtailTestUtils):
         self.assertRedirects(response, reverse('wagtailadmin_pages:edit', args=[self.child_page.id]))
 
         # Check the comment was added
-        comment = self.child_page.comments.get()
+        comment = self.child_page.wagtail_comments.get()
         self.assertEqual(comment.text, 'A test comment')
 
         # This time, no emails should be submitted because the only subscriber has disabled these emails globally
@@ -2574,20 +2574,20 @@ class TestCommenting(TestCase, WagtailTestUtils):
             'title': "I've been edited!",
             'content': "Some content",
             'slug': 'hello-world',
-            'comments-TOTAL_FORMS': '1',
-            'comments-INITIAL_FORMS': '0',
-            'comments-MIN_NUM_FORMS': '0',
-            'comments-MAX_NUM_FORMS': '',
-            'comments-0-DELETE': '',
-            'comments-0-resolved': '',
-            'comments-0-id': '',
-            'comments-0-contentpath': 'title',
-            'comments-0-text': 'A test comment',
-            'comments-0-position': '',
-            'comments-0-replies-TOTAL_FORMS': '0',
-            'comments-0-replies-INITIAL_FORMS': '0',
-            'comments-0-replies-MIN_NUM_FORMS': '0',
-            'comments-0-replies-MAX_NUM_FORMS': '0'
+            'wagtail_comments-TOTAL_FORMS': '1',
+            'wagtail_comments-INITIAL_FORMS': '0',
+            'wagtail_comments-MIN_NUM_FORMS': '0',
+            'wagtail_comments-MAX_NUM_FORMS': '',
+            'wagtail_comments-0-DELETE': '',
+            'wagtail_comments-0-resolved': '',
+            'wagtail_comments-0-id': '',
+            'wagtail_comments-0-contentpath': 'title',
+            'wagtail_comments-0-text': 'A test comment',
+            'wagtail_comments-0-position': '',
+            'wagtail_comments-0-replies-TOTAL_FORMS': '0',
+            'wagtail_comments-0-replies-INITIAL_FORMS': '0',
+            'wagtail_comments-0-replies-MIN_NUM_FORMS': '0',
+            'wagtail_comments-0-replies-MAX_NUM_FORMS': '0'
         }
 
         response = self.client.post(reverse('wagtailadmin_pages:edit', args=[self.child_page.id]), post_data)
@@ -2595,7 +2595,7 @@ class TestCommenting(TestCase, WagtailTestUtils):
         self.assertRedirects(response, reverse('wagtailadmin_pages:edit', args=[self.child_page.id]))
 
         # Check the comment was added
-        comment = self.child_page.comments.get()
+        comment = self.child_page.wagtail_comments.get()
         self.assertEqual(comment.text, 'A test comment')
 
         # No emails should be submitted because subscriber is inactive

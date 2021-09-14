@@ -8,7 +8,7 @@
         {% endfor %}
     </ul>
     {% if self.show_comments_toggle %}
-        {% with comments_number=self.form.formsets.comments|length %}
+        {% with comments_number=self.form.formsets.wagtail_comments|length %}
             <div class="right wide">
                 <div class="comments-controls">
                     <label class="comments-toggle" aria-label="{% trans 'Show comments' %}">

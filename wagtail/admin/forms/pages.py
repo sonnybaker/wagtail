@@ -137,7 +137,7 @@ class WagtailAdminPageForm(WagtailAdminModelForm):
         return super().save(commit=commit)
 
     def is_valid(self):
-        comments = self.formsets.get('comments')
+        comments = self.formsets.get('wagtail_comments')
         # Remove the comments formset if the management form is invalid
         if comments:
             try:
@@ -146,7 +146,7 @@ class WagtailAdminPageForm(WagtailAdminModelForm):
             except forms.ValidationError:
                 has_form = False
             if not has_form:
-                del self.formsets['comments']
+                del self.formsets['wagtail_comments']
         return super().is_valid()
 
     def clean(self):
