@@ -7,10 +7,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from wagtail.admin.admin_url_finder import AdminURLFinder
 from wagtail.core import hooks
 from wagtail.core.compat import AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME
 from wagtail.core.models import Collection, GroupCollectionPermission, GroupPagePermission, Page
@@ -658,6 +660,10 @@ class TestUserEditView(TestCase, WagtailTestUtils):
         self.assertContains(response, 'Password:')
         self.assertContains(response, 'Password confirmation:')
 
+        url_finder = AdminURLFinder(self.current_user)
+        expected_url = '/admin/users/%s/' % self.test_user.pk
+        self.assertEqual(url_finder.get_edit_url(self.test_user), expected_url)
+
     def test_nonexistant_redirect(self):
         invalid_id = '99999999-9999-9999-9999-999999999999' if settings.AUTH_USER_MODEL == 'emailuser.EmailUser' else 100000
         self.assertEqual(self.get(user_id=invalid_id).status_code, 404)
@@ -1227,6 +1233,23 @@ class TestGroupCreateView(TestCase, WagtailTestUtils):
             0
         )
 
+    def test_custom_permissions_hidden(self):
+        # Remove all permissions that show up in the 'custom permissions' column
+        Permission.objects.exclude(
+            Q(codename__startswith="add")
+            | Q(codename__startswith="change")
+            | Q(codename__startswith="delete")
+        ).delete()
+
+        response = self.get()
+
+        self.assertTagInHTML('<fieldset class="custom-permissions">', str(response.content), count=0)
+
+    def test_custom_permissions_shown(self):
+        response = self.get()
+
+        self.assertTagInHTML('<fieldset class="custom-permissions">', str(response.content))
+
 
 class TestGroupEditView(TestCase, WagtailTestUtils):
     def setUp(self):
@@ -1263,7 +1286,7 @@ class TestGroupEditView(TestCase, WagtailTestUtils):
         )
 
         # Login
-        self.login()
+        self.user = self.login()
 
     def get(self, params={}, group_id=None):
         return self.client.get(reverse('wagtailusers_groups:edit', args=(group_id or self.test_group.pk, )), params)
@@ -1305,6 +1328,10 @@ class TestGroupEditView(TestCase, WagtailTestUtils):
         response = self.get()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'wagtailusers/groups/edit.html')
+
+        url_finder = AdminURLFinder(self.user)
+        expected_url = '/admin/groups/%d/' % self.test_group.id
+        self.assertEqual(url_finder.get_edit_url(self.test_group), expected_url)
 
     def test_nonexistant_group_redirect(self):
         self.assertEqual(self.get(group_id=100000).status_code, 404)
@@ -1585,6 +1612,19 @@ class TestGroupEditView(TestCase, WagtailTestUtils):
         # See that the non-registered permission is still there
         self.assertEqual(self.test_group.permissions.count(), 1)
         self.assertEqual(self.test_group.permissions.all()[0], self.non_registered_perm)
+
+    def test_is_custom_permission_checked(self):
+        # Add a permission from the 'custom permission' column to the user's group
+        custom_permission = Permission.objects.get(codename="view_person")
+        self.test_group.permissions.add(custom_permission)
+
+        response = self.get()
+
+        self.assertTagInHTML(
+            '<label class="custom-permissions-item"><input type="checkbox" name="permissions" value="%s" checked>'
+            % custom_permission.id,
+            str(response.content),
+        )
 
 
 class TestGroupViewSet(TestCase):

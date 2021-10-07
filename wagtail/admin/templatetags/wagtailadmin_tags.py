@@ -37,7 +37,7 @@ from wagtail.core.models import (
 from wagtail.core.telepath import JSContext
 from wagtail.core.utils import camelcase_to_underscore
 from wagtail.core.utils import cautious_slugify as _cautious_slugify
-from wagtail.core.utils import escape_script
+from wagtail.core.utils import escape_script, get_content_type_label
 from wagtail.users.utils import get_gravatar_url
 
 
@@ -659,6 +659,11 @@ def user_display_name(user):
         return ''
 
 
+@register.filter
+def format_content_type(content_type):
+    return get_content_type_label(content_type)
+
+
 @register.simple_tag
 def i18n_enabled():
     return getattr(settings, 'WAGTAIL_I18N_ENABLED', False)
@@ -725,6 +730,9 @@ def resolve_url(url):
     # Used by wagtailadmin/shared/pagination_nav.html - given an input that may be a URL route
     # name, or a direct URL path, return it as a direct URL path. On failure (or being passed
     # an empty / None value), return empty string
+    if not url:
+        return ''
+
     try:
         return resolve_url_func(url)
     except NoReverseMatch:
